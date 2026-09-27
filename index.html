@@ -41,6 +41,24 @@
 
       <!-- Nav Actions -->
       <div class="nav-actions">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode">
+          <svg id="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg id="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
         <!-- Auth / Login Profile Button -->
         <div class="auth-wrapper" id="auth-wrapper">
           <button id="auth-trigger-btn" class="auth-trigger-btn">
@@ -497,7 +515,7 @@
     <div class="quickview-card">
       <button id="close-quickview" class="modal-close-icon" aria-label="Close Quick View">&times;</button>
       <div class="quickview-split">
-        <div class="quickview-media">
+        <div class="quickview-media" id="qv-media-container">
           <img id="qv-image" src="" alt="Product">
         </div>
         <div class="quickview-info">
@@ -513,7 +531,19 @@
             </svg>
             Add to Cart
           </button>
+          
+          <!-- Customer Reviews Mini Section -->
+          <div class="qv-reviews-section">
+            <h4 style="margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Customer Reviews</h4>
+            <div id="qv-reviews-list" class="reviews-list"></div>
+          </div>
         </div>
+      </div>
+      
+      <!-- You May Also Like Section -->
+      <div class="qv-related-section">
+        <h3 style="margin-bottom: 1rem;">You May Also Like</h3>
+        <div id="qv-related-grid" class="related-grid"></div>
       </div>
     </div>
   </div>
@@ -583,12 +613,24 @@
 
   <!-- Footer -->
   <footer class="app-footer">
+    <div class="newsletter-section">
+      <h3 style="margin-bottom: 0.5rem;">Join Our VIP Tech Club</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Subscribe for exclusive gear drops, early access, and a <strong>surprise discount code</strong>!</p>
+      <form id="newsletter-form" class="newsletter-form">
+        <input type="email" id="newsletter-email" placeholder="Enter your email address" required class="newsletter-input">
+        <button type="submit" class="primary-btn newsletter-btn">Subscribe</button>
+      </form>
+      <div id="newsletter-success" class="hidden" style="margin-top: 1rem; color: var(--accent-secondary); font-weight: 500;">
+        🎉 You're in! Use code <strong style="color: var(--text-main);">ECARTWELCOME</strong> for 10% off your next order!
+      </div>
+    </div>
     <div class="footer-container">
       <p>&copy; 2026 <strong>E-Cart India</strong>. Premium Vanilla HTML5, CSS3 &amp; JS Storefront. All prices in INR (₹).</p>
     </div>
   </footer>
 
-  <!-- Scripts: data.js loaded FIRST, app.js loaded SECOND -->
+  <!-- Scripts: Confetti, Data, App -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="data.js" defer></script>
   <script src="app.js" defer></script>
 </body>

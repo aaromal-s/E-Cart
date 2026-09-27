@@ -600,6 +600,7 @@
 
     qvImage.src = product.image;
     qvImage.onerror = () => { qvImage.src = product.fallbackImage || 'https://placehold.co/600x600/1e1e2d/ffffff?text=' + encodeURIComponent(product.name); };
+    qvImage.style.transform = 'scale(1)';
     qvCategory.textContent = product.category;
     qvTitle.textContent = product.name;
     qvRating.innerHTML = `<span>${'★'.repeat(Math.floor(product.rating))}</span> ${product.rating} (${product.reviews} reviews)`;
@@ -610,6 +611,50 @@
       addToCart(product.id);
       quickviewModal.classList.add('hidden');
     };
+
+    // 1. Image Zoom Magnifier Logic
+    const qvMedia = document.getElementById('qv-media-container');
+    qvMedia.onmousemove = (e) => {
+      const rect = qvMedia.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      qvImage.style.transformOrigin = `${x}% ${y}%`;
+      qvImage.style.transform = 'scale(2)';
+    };
+    qvMedia.onmouseleave = () => {
+      qvImage.style.transform = 'scale(1)';
+      qvImage.style.transformOrigin = 'center center';
+    };
+
+    // 2. Fake Customer Reviews
+    const reviewsList = document.getElementById('qv-reviews-list');
+    reviewsList.innerHTML = [
+      { name: "Arjun M.", rating: 5, date: "2 days ago", text: "Absolutely phenomenal quality! Exceeded my expectations completely." },
+      { name: "Priya S.", rating: 4, date: "1 week ago", text: "Great product for the price. Delivery was slightly delayed but worth the wait." }
+    ].map(r => `
+      <div class="review-item">
+        <div class="review-item-header">
+          <strong>${r.name}</strong>
+          <span style="color: var(--text-muted);">${r.date}</span>
+        </div>
+        <div style="color: var(--accent-warning); margin-bottom: 0.5rem;">${'★'.repeat(r.rating)}</div>
+        <p style="color: var(--text-dim); margin: 0;">${r.text}</p>
+      </div>
+    `).join('');
+
+    // 3. Related Products Carousel (You May Also Like)
+    const relatedGrid = document.getElementById('qv-related-grid');
+    const relatedProducts = window.PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+    relatedGrid.innerHTML = relatedProducts.map(p => `
+      <div class="product-card" style="padding: 1rem;">
+        <img src="${p.image}" alt="${p.name}" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;" loading="lazy">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">${p.name}</h4>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 600;">${formatINR(p.price)}</span>
+          <button class="primary-btn" onclick="addToCart(${p.id}); showToast('Added to cart!');" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">Add</button>
+        </div>
+      </div>
+    `).join('');
 
     quickviewModal.classList.remove('hidden');
   }
@@ -962,6 +1007,9 @@
     activeDiscountPercent = 0;
     updateCartUI();
     goToCheckoutStep(4);
+    if (window.confetti) {
+      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+    }
   }
 
   function triggerBadgeBounce() {
@@ -989,9 +1037,61 @@
     }, 3000);
   }
 
+  // Theme Toggle Logic
+  function initTheme() {
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const moonIcon = document.getElementById('moon-icon');
+    const sunIcon = document.getElementById('sun-icon');
+    
+    if (!themeBtn) return;
+    
+    const savedTheme = localStorage.getItem('ecart_theme') || 'dark';
+    if (savedTheme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      moonIcon.style.display = 'none';
+      sunIcon.style.display = 'block';
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('ecart_theme', 'dark');
+        moonIcon.style.display = 'block';
+        sunIcon.style.display = 'none';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('ecart_theme', 'light');
+        moonIcon.style.display = 'none';
+        sunIcon.style.display = 'block';
+      }
+    });
+  }
+
+  // Newsletter Logic
+  function initNewsletter() {
+    const form = document.getElementById('newsletter-form');
+    const successMsg = document.getElementById('newsletter-success');
+    if (!form) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.style.display = 'none';
+      successMsg.classList.remove('hidden');
+      if (window.confetti) {
+        confetti({ particleCount: 100, spread: 60, origin: { y: 0.8 } });
+      }
+    });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+      initTheme();
+      initNewsletter();
+    });
   } else {
     init();
+    initTheme();
+    initNewsletter();
   }
 })();
