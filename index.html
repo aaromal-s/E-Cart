@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="E-Cart - India's Premier Electronics Storefront with 60+ Products, Festive Sale Offers & Real-Time Cart Calculations.">
+  <title>E-Cart | Mega Tech Festival 2026</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <p>🪔 <strong>MEGA FESTIVE SALE:</strong> Get Flat <strong>20% OFF</strong> using code <span class="promo-badge-text">ECART20</span> + Free Delivery over ₹2,500! 🪔</p>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-logo" id="brand-logo">
+        <span class="logo-icon">🛒</span>
+        <span class="logo-text">E-Cart</span>
+        <span class="country-tag">IN</span>
+      </a>
+
+      <!-- Search Box -->
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="search-input" placeholder="Search 60+ products, audio, wearables, accessories..." aria-label="Search products">
+      </div>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <!-- Auth / Login Profile Button -->
+        <div class="auth-wrapper" id="auth-wrapper">
+          <button id="auth-trigger-btn" class="auth-trigger-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span id="user-display-name">Sign In</span>
+          </button>
+
+          <!-- User Profile Dropdown (Hidden by default) -->
+          <div id="user-dropdown" class="user-dropdown hidden">
+            <div class="dropdown-header">
+              <div class="user-avatar" id="dropdown-avatar">A</div>
+              <div class="user-info">
+                <strong id="dropdown-name">User Name</strong>
+                <span id="dropdown-email">user@email.com</span>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button id="dashboard-btn" class="dropdown-item">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Dashboard</span>
+            </button>
+            <button id="logout-btn" class="dropdown-item danger">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Wishlist Button -->
+        <button id="wishlist-toggle-btn" class="cart-trigger-btn" aria-label="View Wishlist">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span class="cart-btn-label">Wishlist</span>
+          <span id="wishlist-badge" class="cart-badge" style="background: var(--accent-secondary);">0</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button id="cart-toggle-btn" class="cart-trigger-btn" aria-label="Open Shopping Cart">
+          <svg class="cart-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="cart-btn-label">Cart</span>
+          <span id="cart-badge" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section with Frontpage Animations -->
+  <section class="hero-section">
+    <div class="hero-mesh-bg"></div>
+    <div class="hero-content fade-in-up">
+      <span class="hero-tag pulse-tag">🪔 India's Biggest Festival Sale 2026</span>
+      <h1>Experience Future Tech with <span class="gradient-text">E-Cart India</span></h1>
+      <p>Explore over 60+ flagship products across Audio, Wearables, Accessories &amp; Lifestyle with instant GST breakdown &amp; express delivery.</p>
+    </div>
+  </section>
+
+  <!-- Main Viewport Container -->
+  <main class="main-container">
+    
+    <!-- Controls & Category Filters -->
+    <section class="controls-bar">
+      <div class="category-filters" id="category-filters">
+        <button class="filter-chip active" data-category="all">All Products (150)</button>
+        <button class="filter-chip" data-category="Audio">Audio (15)</button>
+        <button class="filter-chip" data-category="Wearables">Wearables (15)</button>
+        <button class="filter-chip" data-category="Accessories">Accessories (15)</button>
+        <button class="filter-chip" data-category="Lifestyle">Lifestyle (15)</button>
+        <button class="filter-chip" data-category="Utensils">Utensils (15)</button>
+        <button class="filter-chip" data-category="Clothes">Clothes (15)</button>
+        <button class="filter-chip" data-category="Gaming Equipments">Gaming Equipments (15)</button>
+        <button class="filter-chip" data-category="Toys">Toys (15)</button>
+        <button class="filter-chip" data-category="Arts & Crafts">Arts &amp; Crafts (15)</button>
+        <button class="filter-chip" data-category="Sports Items">Sports Items (15)</button>
+      </div>
+      <div class="results-info">
+        <div class="results-count" id="results-count">
+          Showing 150 products
+        </div>
+        <div class="sort-control">
+          <label for="sort-select">Sort by:</label>
+          <select id="sort-select" class="sort-select">
+            <option value="featured">Featured</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Grid Viewport -->
+    <section id="product-grid" class="product-grid">
+      <!-- 60 product cards populated dynamically via app.js -->
+    </section>
+
+    <!-- Empty State Viewport -->
+    <div id="empty-state" class="empty-state hidden">
+      <div class="empty-icon">🔍</div>
+      <h3>No products match your search</h3>
+      <p>Try searching for another keyword or clear your active category filter.</p>
+      <button id="reset-filters-btn" class="secondary-btn">Reset All Filters</button>
+    </div>
+  </main>
+
+  <!-- Grand Launch Festive Sale Event Popup Modal (Amazon Style) -->
+  <div id="sale-modal" class="modal-backdrop">
+    <div class="sale-modal-card">
+      <button id="close-sale-modal" class="modal-close-icon" aria-label="Close Sale Popup">&times;</button>
+      <div class="sale-banner-media">
+        <img src="assets/festive_banner.jpg" alt="Festive Sale Banner" onerror="this.src='https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&auto=format&fit=crop&q=80'">
+        <span class="sale-live-badge">🔴 LIVE NOW</span>
+      </div>
+      <div class="sale-modal-body">
+        <h2>🪔 Mega Tech Festival 2026!</h2>
+        <p>Unlock an extra <strong>20% Instant Discount</strong> on all 60+ products sitewide.</p>
+        
+        <!-- Live Countdown Timer -->
+        <div class="countdown-container">
+          <span class="countdown-label">Offer ends in:</span>
+          <div id="countdown-timer" class="countdown-timer">
+            <div class="time-box"><span id="timer-hours">05</span><small>Hours</small></div>
+            <span class="colon">:</span>
+            <div class="time-box"><span id="timer-mins">42</span><small>Mins</small></div>
+            <span class="colon">:</span>
+            <div class="time-box"><span id="timer-secs">18</span><small>Secs</small></div>
+          </div>
+        </div>
+
+        <div class="coupon-box">
+          <span>Use Coupon Code:</span>
+          <strong id="promo-code">ECART20</strong>
+        </div>
+
+        <button id="claim-coupon-btn" class="claim-btn">
+          ⚡ Apply 20% Discount Coupon &amp; Shop Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Split-Screen Login & Register Modal Portal -->
+  <div id="auth-modal" class="modal-backdrop hidden">
+    <div class="auth-modal-card">
+      <button id="close-auth-modal" class="modal-close-icon" aria-label="Close Login Modal">&times;</button>
+      
+      <div class="auth-split-container">
+        
+        <!-- Left Side: Offer Product Slider & Banners -->
+        <div class="auth-slider-side">
+          <div class="auth-slider" id="auth-slider">
+            
+            <!-- Slide 1 -->
+            <div class="slide active">
+              <div class="slide-media">
+                <img src="assets/headphones.jpg" alt="Aura Pro Headphones" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80'">
+                <span class="offer-pill">FLAT 40% OFF</span>
+              </div>
+              <div class="slide-caption">
+                <h3>Aura Pro Headphones</h3>
+                <p>Sign in to unlock exclusive member pricing at <strong>₹24,999</strong>.</p>
+              </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide">
+              <div class="slide-media">
+                <img src="assets/smartwatch.jpg" alt="Apex Ultra Smartwatch" onerror="this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80'">
+                <span class="offer-pill">NEW RELEASE</span>
+              </div>
+              <div class="slide-caption">
+                <h3>Apex Ultra Watch</h3>
+                <p>Titanium chassis &amp; 100m water resistance. Get instant 20% cashback!</p>
+              </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide">
+              <div class="slide-media">
+                <img src="assets/festive_banner.jpg" alt="Festive Offers" onerror="this.src='https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&auto=format&fit=crop&q=80'">
+                <span class="offer-pill">FESTIVE DEAL</span>
+              </div>
+              <div class="slide-caption">
+                <h3>E-Cart Rewards Club</h3>
+                <p>Earn reward points on every order &amp; enjoy free express shipping nationwide.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Slider Indicators -->
+          <div class="slider-dots" id="slider-dots">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+          </div>
+        </div>
+
+        <!-- Right Side: Login & Register Forms -->
+        <div class="auth-form-container">
+          
+          <!-- Tab Navigation Header -->
+          <div class="auth-tabs">
+            <button id="tab-login" class="auth-tab-btn active">Sign In</button>
+            <button id="tab-register" class="auth-tab-btn">Register Account</button>
+          </div>
+
+          <!-- Form 1: LOGIN -->
+          <form id="form-login" class="auth-form active">
+            <h2>Welcome Back to E-Cart</h2>
+            <p class="auth-subtitle">Sign in to manage your orders, saved cart &amp; rewards.</p>
+
+            <div class="form-group">
+              <label for="login-email">Email Address</label>
+              <input type="email" id="login-email" placeholder="name@example.com" required>
+            </div>
+
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" placeholder="••••••••" required>
+            </div>
+
+            <div class="form-row-remember">
+              <label class="checkbox-label">
+                <input type="checkbox" id="login-remember" checked>
+                <span>Remember me</span>
+              </label>
+              <a href="#" class="forgot-link" id="forgot-pass-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="auth-submit-btn">Sign In to E-Cart</button>
+          </form>
+
+          <!-- Form 2: REGISTER -->
+          <form id="form-register" class="auth-form hidden">
+            <h2>Create E-Cart Account</h2>
+            <p class="auth-subtitle">Join E-Cart to unlock member discounts &amp; priority support.</p>
+
+            <div class="form-group">
+              <label for="reg-name">Full Name</label>
+              <input type="text" id="reg-name" placeholder="Aromal Kumar" required>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-email">Email Address</label>
+              <input type="email" id="reg-email" placeholder="name@example.com" required>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-password">Create Password</label>
+              <input type="password" id="reg-password" placeholder="••••••••" minlength="6" required>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-confirm-password">Confirm Password</label>
+              <input type="password" id="reg-confirm-password" placeholder="••••••••" minlength="6" required>
+            </div>
+
+            <button type="submit" class="auth-submit-btn">Create Account</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sliding Cart Drawer Overlay -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+
+  <!-- Cart Drawer Panel Sidebar -->
+  <aside id="cart-drawer" class="cart-drawer" aria-label="Shopping Cart Drawer">
+    <!-- Drawer Header -->
+    <div class="drawer-header">
+      <div class="drawer-title">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <h2>Your Shopping Cart</h2>
+      </div>
+      <button id="close-cart-btn" class="close-drawer-btn" aria-label="Close Shopping Cart">&times;</button>
+    </div>
+
+    <!-- Free Shipping Progress Bar (Threshold: ₹2,500) -->
+    <div class="shipping-promo">
+      <div class="shipping-text" id="shipping-text">Add <strong>₹2,500.00</strong> more for Free Shipping!</div>
+      <div class="progress-track">
+        <div id="shipping-progress-bar" class="progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Active Applied Coupon Banner -->
+    <div id="applied-coupon-banner" class="coupon-applied-tag hidden">
+      <span>🎉 20% Festival Discount Applied!</span>
+      <button id="remove-coupon-btn" class="remove-coupon">&times;</button>
+    </div>
+
+    <!-- Cart Item Viewport List -->
+    <div id="cart-items-list" class="cart-items-list">
+      <!-- Dynamic cart items populated via app.js -->
+    </div>
+
+    <!-- Sticky Calculations Footer -->
+    <div class="drawer-footer">
+      <div class="calc-row">
+        <span class="calc-label">Subtotal</span>
+        <span id="cart-subtotal" class="calc-val">₹0.00</span>
+      </div>
+      
+      <div id="discount-row" class="calc-row discount-line hidden">
+        <span class="calc-label">Festive Discount (20%)</span>
+        <span id="cart-discount" class="calc-val text-green">-₹0.00</span>
+      </div>
+
+      <div class="calc-row">
+        <span class="calc-label">Estimated GST (10%)</span>
+        <span id="cart-tax" class="calc-val">₹0.00</span>
+      </div>
+
+      <div class="calc-divider"></div>
+      <div class="calc-row total-row">
+        <span class="calc-label-total">Grand Total</span>
+        <span id="cart-total" class="calc-val-total">₹0.00</span>
+      </div>
+
+      <!-- Drawer Action Buttons -->
+      <div class="drawer-actions">
+        <button id="checkout-btn" class="checkout-btn">
+          <span>Proceed to Checkout</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+        <button id="clear-cart-btn" class="clear-cart-btn">Clear Cart</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Full Checkout Flow Modal -->
+  <div id="checkout-modal" class="modal-backdrop hidden">
+    <div class="checkout-card">
+      <button id="close-checkout" class="modal-close-icon" aria-label="Close Checkout">&times;</button>
+      
+      <!-- Checkout Progress Header -->
+      <div class="checkout-progress">
+        <div class="progress-step active" data-step="1">1. Shipping</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="2">2. Payment</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="3">3. Confirm</div>
+      </div>
+
+      <div class="checkout-body">
+        <!-- Step 1: Shipping Address -->
+        <div id="checkout-step-1" class="checkout-step active">
+          <h3>Shipping Address</h3>
+          <form id="shipping-form" class="checkout-form">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="ship-name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label>Address Line</label>
+              <input type="text" id="ship-address" required placeholder="123 Main St, Apt 4B">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="ship-city" required placeholder="Mumbai">
+              </div>
+              <div class="form-group">
+                <label>PIN Code</label>
+                <input type="text" id="ship-pin" required pattern="[0-9]{6}" placeholder="400001">
+              </div>
+            </div>
+            <button type="submit" class="primary-btn checkout-next-btn" style="margin-top: 1rem; width: 100%;">Continue to Payment</button>
+          </form>
+        </div>
+
+        <!-- Step 2: Payment Method -->
+        <div id="checkout-step-2" class="checkout-step hidden">
+          <h3>Select Payment Method</h3>
+          <div class="payment-options">
+            <label class="payment-option">
+              <input type="radio" name="payment" value="upi" checked>
+              <div class="pay-box">
+                <span class="pay-icon">📱</span>
+                <span class="pay-text">UPI (GPay, PhonePe, Paytm)</span>
+              </div>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="card">
+              <div class="pay-box">
+                <span class="pay-icon">💳</span>
+                <span class="pay-text">Credit / Debit Card</span>
+              </div>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="cod">
+              <div class="pay-box">
+                <span class="pay-icon">💵</span>
+                <span class="pay-text">Cash on Delivery (COD)</span>
+              </div>
+            </label>
+          </div>
+          <div class="checkout-actions">
+            <button class="secondary-btn" id="back-to-step-1">Back</button>
+            <button class="primary-btn checkout-next-btn" id="go-to-step-3">Review Order</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Order Review & Confirmation -->
+        <div id="checkout-step-3" class="checkout-step hidden">
+          <h3>Review Your Order</h3>
+          <div class="order-summary-box" id="checkout-order-summary">
+            <!-- Populated via JS -->
+          </div>
+          <div class="checkout-actions">
+            <button class="secondary-btn" id="back-to-step-2">Back</button>
+            <button class="primary-btn checkout-next-btn" id="place-order-btn">Place Order Securely</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Success Message -->
+        <div id="checkout-step-4" class="checkout-step hidden" style="text-align: center;">
+          <div class="modal-icon" style="margin: 0 auto 1rem;">🎉</div>
+          <h2>Order Placed Successfully!</h2>
+          <p>Your order <strong id="success-order-id">#ORD-123</strong> has been confirmed.</p>
+          <p style="margin-bottom: 2rem; color: var(--text-muted);">We will send the tracking details to your email shortly.</p>
+          <button id="modal-close-btn" class="primary-btn" style="width: 100%;">Continue Shopping</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Quick View Modal -->
+  <div id="quickview-modal" class="modal-backdrop hidden">
+    <div class="quickview-card">
+      <button id="close-quickview" class="modal-close-icon" aria-label="Close Quick View">&times;</button>
+      <div class="quickview-split">
+        <div class="quickview-media">
+          <img id="qv-image" src="" alt="Product">
+        </div>
+        <div class="quickview-info">
+          <span id="qv-category" class="category-label"></span>
+          <h2 id="qv-title" class="qv-title"></h2>
+          <div class="qv-rating" id="qv-rating"></div>
+          <p id="qv-desc" class="qv-desc"></p>
+          <div class="qv-price" id="qv-price"></div>
+          <button id="qv-add-cart" class="primary-btn qv-add-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wishlist Modal -->
+  <div id="wishlist-modal" class="modal-backdrop hidden">
+    <div class="modal-card wishlist-modal-card">
+      <div class="drawer-header" style="padding: 0; border: none; margin-bottom: 1.5rem;">
+        <div class="drawer-title">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <h2>My Wishlist</h2>
+        </div>
+        <button id="close-wishlist" class="modal-close-icon" aria-label="Close Wishlist" style="position: static;">&times;</button>
+      </div>
+      <div id="wishlist-items-container" class="product-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+        <!-- Wishlist items populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- User Dashboard Modal -->
+  <div id="dashboard-modal" class="modal-backdrop hidden">
+    <div class="dashboard-card">
+      <button id="close-dashboard" class="modal-close-icon" aria-label="Close Dashboard">&times;</button>
+      <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+          <div class="dash-user-header">
+            <div class="user-avatar" id="dash-avatar">A</div>
+            <div>
+              <h3 id="dash-name">User Name</h3>
+              <p id="dash-email" style="color: var(--text-muted);">user@email.com</p>
+            </div>
+          </div>
+          <nav class="dash-nav">
+            <button class="dash-nav-btn active" data-tab="orders">My Orders</button>
+            <button class="dash-nav-btn" data-tab="profile">Profile Details</button>
+          </nav>
+        </aside>
+        <!-- Main Content -->
+        <div class="dashboard-content">
+          <!-- Orders Tab -->
+          <div id="dash-tab-orders" class="dash-tab active">
+            <h2 style="margin-bottom: 1.5rem;">Order History</h2>
+            <div id="orders-list" class="orders-list">
+              <!-- Orders populated via JS -->
+            </div>
+          </div>
+          <!-- Profile Tab -->
+          <div id="dash-tab-profile" class="dash-tab hidden">
+            <h2 style="margin-bottom: 1.5rem;">Profile Details</h2>
+            <div class="profile-card">
+              <p><strong>Name:</strong> <span id="prof-name"></span></p>
+              <p><strong>Email:</strong> <span id="prof-email"></span></p>
+              <p><strong>Member Since:</strong> <span>Oct 2023</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>&copy; 2026 <strong>E-Cart India</strong>. Premium Vanilla HTML5, CSS3 &amp; JS Storefront. All prices in INR (₹).</p>
+    </div>
+  </footer>
+
+  <!-- Scripts: data.js loaded FIRST, app.js loaded SECOND -->
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
