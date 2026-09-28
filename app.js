@@ -1185,7 +1185,8 @@
       if(applyBtn) applyBtn.onclick = () => {
         const minP = document.getElementById('min-price').value;
         const maxP = document.getElementById('max-price').value;
-        const rating = document.querySelector('input[name="rating-filter"]:checked').value;
+        const ratingInput = document.querySelector('input[name="rating-filter"]:checked');
+        const rating = ratingInput ? ratingInput.value : 0;
         
         minPriceFilter = minP ? parseFloat(minP) : null;
         maxPriceFilter = maxP ? parseFloat(maxP) : null;
@@ -1231,7 +1232,7 @@
     const recentProducts = recentlyViewed.map(id => window.PRODUCTS.find(p => p.id === id)).filter(Boolean);
     
     grid.innerHTML = recentProducts.map(product => `
-      <div class="product-card" style="padding: 1rem; cursor: pointer;" onclick="document.querySelector('[data-action=quickview][data-id=\\'${product.id}\\']').click()">
+      <div class="product-card recent-item-card" data-id="${product.id}" style="padding: 1rem; cursor: pointer;">
         <img src="${product.image}" alt="${product.name}" style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;" loading="lazy">
         <h4 style="font-size: 0.9rem; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${product.name}</h4>
         <div style="font-weight: 600; color: var(--accent-secondary);">${formatINR(product.price)}</div>
@@ -1289,7 +1290,7 @@
       <img src="${p.image}" alt="${p.name}" style="height: 100px; width: 100px; object-fit: contain; margin-bottom: 8px;"><br>
       <strong>${p.name}</strong><br>
       <span style="color: var(--accent-secondary); font-size: 1.1rem;">${formatINR(p.price)}</span><br>
-      <button class="primary-btn compare-add-btn" style="padding: 6px 12px; margin-top: 8px;" onclick="document.getElementById('close-compare-modal').click(); document.querySelector('.add-cart-btn[data-id=\\'${p.id}\\']').click();">Add to Cart</button>
+      <button class="primary-btn compare-modal-add-cart-btn" data-id="${p.id}" style="padding: 6px 12px; margin-top: 8px;">Add to Cart</button>
     </th>`).join('') + '</tr>';
     
     let rows = '';
@@ -1336,6 +1337,30 @@
       if (compareBtn) compareBtn.onclick = () => { renderCompareModal(); compareModal.classList.remove('hidden'); };
       if (closeCompare) closeCompare.onclick = () => compareModal.classList.add('hidden');
       if (clearCompare) clearCompare.onclick = () => { compareList = []; renderProducts(); renderCompareBar(); };
+
+      const recentGrid = document.getElementById('recently-viewed-grid');
+      if (recentGrid) {
+        recentGrid.addEventListener('click', (e) => {
+          const card = e.target.closest('.recent-item-card');
+          if (card) {
+            const productId = parseInt(card.getAttribute('data-id'), 10);
+            openQuickView(productId);
+          }
+        });
+      }
+      
+      const compareTable = document.getElementById('compare-table');
+      if (compareTable) {
+        compareTable.addEventListener('click', (e) => {
+          const btn = e.target.closest('.compare-modal-add-cart-btn');
+          if (btn) {
+            const productId = parseInt(btn.getAttribute('data-id'), 10);
+            addToCart(productId);
+            const closeBtn = document.getElementById('close-compare-modal');
+            if (closeBtn) closeBtn.click();
+          }
+        });
+      }
     });
   } else {
     init();
@@ -1353,5 +1378,29 @@
     if (compareBtn) compareBtn.onclick = () => { renderCompareModal(); compareModal.classList.remove('hidden'); };
     if (closeCompare) closeCompare.onclick = () => compareModal.classList.add('hidden');
     if (clearCompare) clearCompare.onclick = () => { compareList = []; renderProducts(); renderCompareBar(); };
+
+    const recentGrid = document.getElementById('recently-viewed-grid');
+    if (recentGrid) {
+      recentGrid.addEventListener('click', (e) => {
+        const card = e.target.closest('.recent-item-card');
+        if (card) {
+          const productId = parseInt(card.getAttribute('data-id'), 10);
+          openQuickView(productId);
+        }
+      });
+    }
+    
+    const compareTable = document.getElementById('compare-table');
+    if (compareTable) {
+      compareTable.addEventListener('click', (e) => {
+        const btn = e.target.closest('.compare-modal-add-cart-btn');
+        if (btn) {
+          const productId = parseInt(btn.getAttribute('data-id'), 10);
+          addToCart(productId);
+          const closeBtn = document.getElementById('close-compare-modal');
+          if (closeBtn) closeBtn.click();
+        }
+      });
+    }
   }
 })();
