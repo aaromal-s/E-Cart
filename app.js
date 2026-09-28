@@ -20,6 +20,15 @@
   let wishlist = []; // Array of product IDs
   let currentSort = 'featured'; // 'featured', 'price-low', 'price-high', 'rating'
 
+  // Pro Features State
+  let currentPage = 1;
+  const itemsPerPage = 12;
+  let minPriceFilter = null;
+  let maxPriceFilter = null;
+  let minRatingFilter = 0;
+  let compareList = [];
+  let recentlyViewed = JSON.parse(localStorage.getItem('ecart_recent') || '[]');
+
   // =========================================================================
   // 2. Helper Functions
   // =========================================================================
@@ -314,7 +323,12 @@
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.category.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+      
+      const matchesMinPrice = minPriceFilter === null || product.price >= minPriceFilter;
+      const matchesMaxPrice = maxPriceFilter === null || product.price <= maxPriceFilter;
+      const matchesRating = product.rating >= minRatingFilter;
+
+      return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesRating;
     });
 
     // Apply Sorting
@@ -333,18 +347,26 @@
   function renderProducts() {
     const products = getFilteredProducts();
     resultsCount.textContent = `Showing ${products.length} product${products.length === 1 ? '' : 's'}`;
+    const paginationContainer = document.getElementById('pagination-container');
 
     if (products.length === 0) {
       productGrid.innerHTML = '';
       emptyState.classList.remove('hidden');
+      if (paginationContainer) paginationContainer.innerHTML = '';
       return;
     }
 
     emptyState.classList.add('hidden');
 
-    productGrid.innerHTML = products
+    const totalPages = Math.ceil(products.length / itemsPerPage);
+    if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedProducts = products.slice(startIndex, startIndex + itemsPerPage);
+
+    productGrid.innerHTML = paginatedProducts
       .map((product) => {
         const ratingStars = '★'.repeat(Math.floor(product.rating));
+        const isCompared = compareList.includes(product.id);
 
         return `
         <article class="product-card" data-id="${product.id}">
@@ -354,6 +376,9 @@
               <svg viewBox="0 0 24 24" width="18" height="18" fill="${wishlist.includes(product.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
               </svg>
+            </button>
+            <button class="compare-btn-card ${isCompared ? 'active' : ''}" data-action="compare" data-id="${product.id}" title="Compare">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg>
             </button>
             <div class="quickview-overlay" data-action="quickview" data-id="${product.id}">
               <span>Quick View</span>
@@ -389,6 +414,30 @@
       `;
       })
       .join('');
+      
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    const container = document.getElementById('pagination-container');
+    if (!container) return;
+    if (totalPages <= 1) {
+      container.innerHTML = '';
+      return;
+    }
+    let html = '';
+    for (let i = 1; i <= totalPages; i++) {
+      html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+    }
+    container.innerHTML = html;
+    
+    container.querySelectorAll('.page-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        currentPage = parseInt(e.target.getAttribute('data-page'));
+        renderProducts();
+        document.querySelector('.controls-bar').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
   }
 
   // =========================================================================
@@ -606,6 +655,7 @@
     qvRating.innerHTML = `<span>${'★'.repeat(Math.floor(product.rating))}</span> ${product.rating} (${product.reviews} reviews)`;
     qvDesc.textContent = product.description;
     qvPrice.textContent = formatINR(product.price);
+    trackRecentlyViewed(productId);
     
     qvAddCart.onclick = () => {
       addToCart(product.id);
@@ -794,6 +844,7 @@
       const addBtn = e.target.closest('[data-action="add"]');
       const wishlistBtn = e.target.closest('[data-action="wishlist"]');
       const quickviewBtn = e.target.closest('[data-action="quickview"]');
+      const compareBtn = e.target.closest('[data-action="compare"]');
       
       if (addBtn) {
         const productId = parseInt(addBtn.getAttribute('data-id'), 10);
@@ -804,6 +855,9 @@
       } else if (quickviewBtn) {
         const productId = parseInt(quickviewBtn.getAttribute('data-id'), 10);
         openQuickView(productId);
+      } else if (compareBtn) {
+        const productId = parseInt(compareBtn.getAttribute('data-id'), 10);
+        toggleCompare(productId);
       }
     });
 
@@ -1083,15 +1137,221 @@
     });
   }
 
+  // =========================================================================
+  // Pro Features Logic
+  // =========================================================================
+  
+  function initHeroSlider() {
+    const slides = document.querySelectorAll('.hero-slide');
+    const dotsContainer = document.getElementById('hero-slider-dots');
+    const prevBtn = document.getElementById('slider-prev');
+    const nextBtn = document.getElementById('slider-next');
+    if (!slides.length) return;
+
+    let currentIndex = 0;
+    
+    dotsContainer.innerHTML = Array.from(slides).map((_, i) => `<div class="slider-indicator ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`).join('');
+    const dots = dotsContainer.querySelectorAll('.slider-indicator');
+
+    function goToSlide(index) {
+      slides[currentIndex].classList.remove('active');
+      dots[currentIndex].classList.remove('active');
+      currentIndex = (index + slides.length) % slides.length;
+      slides[currentIndex].classList.add('active');
+      dots[currentIndex].classList.add('active');
+    }
+
+    if (prevBtn) prevBtn.onclick = () => goToSlide(currentIndex - 1);
+    if (nextBtn) nextBtn.onclick = () => goToSlide(currentIndex + 1);
+
+    dots.forEach(dot => {
+      dot.onclick = () => goToSlide(parseInt(dot.getAttribute('data-index')));
+    });
+
+    setInterval(() => goToSlide(currentIndex + 1), 6000);
+  }
+
+  function initAdvancedFilters() {
+    const filterBtn = document.getElementById('advanced-filter-btn');
+    const filterDrawer = document.getElementById('filter-drawer');
+    const closeFilter = document.getElementById('close-filter-btn');
+    const applyBtn = document.getElementById('apply-filters-btn');
+    const clearBtn = document.getElementById('clear-advanced-filters-btn');
+
+    if (filterBtn && filterDrawer) {
+      filterBtn.onclick = () => filterDrawer.classList.add('open');
+      if(closeFilter) closeFilter.onclick = () => filterDrawer.classList.remove('open');
+      
+      if(applyBtn) applyBtn.onclick = () => {
+        const minP = document.getElementById('min-price').value;
+        const maxP = document.getElementById('max-price').value;
+        const rating = document.querySelector('input[name="rating-filter"]:checked').value;
+        
+        minPriceFilter = minP ? parseFloat(minP) : null;
+        maxPriceFilter = maxP ? parseFloat(maxP) : null;
+        minRatingFilter = parseFloat(rating);
+        currentPage = 1;
+        renderProducts();
+        filterDrawer.classList.remove('open');
+      };
+
+      if(clearBtn) clearBtn.onclick = () => {
+        document.getElementById('min-price').value = '';
+        document.getElementById('max-price').value = '';
+        document.querySelector('input[name="rating-filter"][value="0"]').checked = true;
+        minPriceFilter = null;
+        maxPriceFilter = null;
+        minRatingFilter = 0;
+        currentPage = 1;
+        renderProducts();
+        filterDrawer.classList.remove('open');
+      };
+    }
+  }
+
+  function trackRecentlyViewed(productId) {
+    recentlyViewed = recentlyViewed.filter(id => id !== productId);
+    recentlyViewed.unshift(productId);
+    if (recentlyViewed.length > 5) recentlyViewed.pop();
+    localStorage.setItem('ecart_recent', JSON.stringify(recentlyViewed));
+    renderRecentlyViewed();
+  }
+
+  function renderRecentlyViewed() {
+    const sec = document.getElementById('recently-viewed-section');
+    const grid = document.getElementById('recently-viewed-grid');
+    if (!sec || !grid) return;
+
+    if (recentlyViewed.length === 0) {
+      sec.style.display = 'none';
+      return;
+    }
+
+    sec.style.display = 'block';
+    const recentProducts = recentlyViewed.map(id => window.PRODUCTS.find(p => p.id === id)).filter(Boolean);
+    
+    grid.innerHTML = recentProducts.map(product => `
+      <div class="product-card" style="padding: 1rem; cursor: pointer;" onclick="document.querySelector('[data-action=quickview][data-id=\\'${product.id}\\']').click()">
+        <img src="${product.image}" alt="${product.name}" style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;" loading="lazy">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${product.name}</h4>
+        <div style="font-weight: 600; color: var(--accent-secondary);">${formatINR(product.price)}</div>
+      </div>
+    `).join('');
+  }
+
+  function toggleCompare(productId) {
+    if (compareList.includes(productId)) {
+      compareList = compareList.filter(id => id !== productId);
+      showToast('Removed from comparison', 'info');
+    } else {
+      if (compareList.length >= 4) {
+        showToast('You can compare up to 4 items max', 'warning');
+        return;
+      }
+      compareList.push(productId);
+      showToast('Added to comparison', 'success');
+    }
+    renderProducts();
+    renderCompareBar();
+  }
+
+  function renderCompareBar() {
+    const bar = document.getElementById('compare-bar');
+    const count = document.getElementById('compare-count');
+    const items = document.getElementById('compare-items');
+    if(!bar) return;
+    
+    if (compareList.length === 0) {
+      bar.classList.remove('show');
+      return;
+    }
+    
+    bar.classList.add('show');
+    count.textContent = compareList.length;
+    
+    items.innerHTML = compareList.map(id => {
+      const p = window.PRODUCTS.find(x => x.id === id);
+      return `<div class="compare-item-chip">${p.name.substring(0,12)}... <span class="remove-compare" data-id="${id}">&times;</span></div>`;
+    }).join('');
+
+    items.querySelectorAll('.remove-compare').forEach(btn => {
+      btn.onclick = (e) => toggleCompare(parseInt(e.target.getAttribute('data-id')));
+    });
+  }
+
+  function renderCompareModal() {
+    const table = document.getElementById('compare-table');
+    const productsToCompare = compareList.map(id => window.PRODUCTS.find(p => p.id === id)).filter(Boolean);
+    
+    if (productsToCompare.length === 0) return;
+
+    let thead = '<tr><th>Feature</th>' + productsToCompare.map(p => `<th>
+      <img src="${p.image}" alt="${p.name}" style="height: 100px; width: 100px; object-fit: contain; margin-bottom: 8px;"><br>
+      <strong>${p.name}</strong><br>
+      <span style="color: var(--accent-secondary); font-size: 1.1rem;">${formatINR(p.price)}</span><br>
+      <button class="primary-btn compare-add-btn" style="padding: 6px 12px; margin-top: 8px;" onclick="document.getElementById('close-compare-modal').click(); document.querySelector('.add-cart-btn[data-id=\\'${p.id}\\']').click();">Add to Cart</button>
+    </th>`).join('') + '</tr>';
+    
+    let rows = '';
+    const features = [
+      { key: 'rating', label: 'Rating' },
+      { key: 'category', label: 'Category' },
+      { key: 'description', label: 'Description' }
+    ];
+
+    features.forEach(f => {
+      rows += `<tr><td><strong>${f.label}</strong></td>` + productsToCompare.map(p => `<td>${
+        f.key === 'rating' ? '★'.repeat(Math.floor(p.rating)) + ' (' + p.reviews + ')' : p[f.key]
+      }</td>`).join('') + `</tr>`;
+    });
+
+    table.innerHTML = thead + rows;
+  }
+
+  function initMegaMenu() {
+    document.querySelectorAll('.mega-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const cat = e.target.getAttribute('data-cat');
+        const btn = document.querySelector(`.filter-chip[data-category="${cat}"]`);
+        if (btn) btn.click();
+      });
+    });
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       init();
       initTheme();
       initNewsletter();
+      initHeroSlider();
+      initAdvancedFilters();
+      renderRecentlyViewed();
+      initMegaMenu();
+      
+      const compareBtn = document.getElementById('compare-btn');
+      const compareModal = document.getElementById('compare-modal');
+      const closeCompare = document.getElementById('close-compare-modal');
+      const clearCompare = document.getElementById('clear-compare-btn');
+      if (compareBtn) compareBtn.onclick = () => { renderCompareModal(); compareModal.classList.remove('hidden'); };
+      if (closeCompare) closeCompare.onclick = () => compareModal.classList.add('hidden');
+      if (clearCompare) clearCompare.onclick = () => { compareList = []; renderProducts(); renderCompareBar(); };
     });
   } else {
     init();
     initTheme();
     initNewsletter();
+    initHeroSlider();
+    initAdvancedFilters();
+    renderRecentlyViewed();
+    initMegaMenu();
+    
+    const compareBtn = document.getElementById('compare-btn');
+    const compareModal = document.getElementById('compare-modal');
+    const closeCompare = document.getElementById('close-compare-modal');
+    const clearCompare = document.getElementById('clear-compare-btn');
+    if (compareBtn) compareBtn.onclick = () => { renderCompareModal(); compareModal.classList.remove('hidden'); };
+    if (closeCompare) closeCompare.onclick = () => compareModal.classList.add('hidden');
+    if (clearCompare) clearCompare.onclick = () => { compareList = []; renderProducts(); renderCompareBar(); };
   }
 })();

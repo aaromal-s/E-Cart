@@ -30,6 +30,39 @@
         <span class="country-tag">IN</span>
       </a>
 
+      <!-- Mega Menu Dropdown -->
+      <div class="nav-item mega-menu-trigger">
+        <span>Categories</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 4px; vertical-align: middle;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="mega-menu">
+          <div class="mega-menu-content">
+            <div class="mega-column">
+              <h4>Electronics</h4>
+              <a href="#" class="mega-link" data-cat="Audio">Audio</a>
+              <a href="#" class="mega-link" data-cat="Wearables">Wearables</a>
+              <a href="#" class="mega-link" data-cat="Accessories">Accessories</a>
+            </div>
+            <div class="mega-column">
+              <h4>Home & Living</h4>
+              <a href="#" class="mega-link" data-cat="Lifestyle">Lifestyle</a>
+              <a href="#" class="mega-link" data-cat="Utensils">Utensils</a>
+              <a href="#" class="mega-link" data-cat="Arts & Crafts">Arts & Crafts</a>
+            </div>
+            <div class="mega-column">
+              <h4>Fashion & Leisure</h4>
+              <a href="#" class="mega-link" data-cat="Clothes">Clothes</a>
+              <a href="#" class="mega-link" data-cat="Sports Items">Sports Items</a>
+              <a href="#" class="mega-link" data-cat="Toys">Toys</a>
+              <a href="#" class="mega-link" data-cat="Gaming Equipments">Gaming</a>
+            </div>
+            <div class="mega-column mega-promo">
+              <img src="assets/headphones.jpg" alt="Promo" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&auto=format&fit=crop&q=80'">
+              <div class="mega-promo-text">Up to 40% Off Audio</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Search Box -->
       <div class="search-box">
         <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
@@ -120,14 +153,31 @@
     </div>
   </header>
 
-  <!-- Hero Section with Frontpage Animations -->
-  <section class="hero-section">
-    <div class="hero-mesh-bg"></div>
-    <div class="hero-content fade-in-up">
-      <span class="hero-tag pulse-tag">🪔 India's Biggest Festival Sale 2026</span>
-      <h1>Experience Future Tech with <span class="gradient-text">E-Cart India</span></h1>
-      <p>Explore over 60+ flagship products across Audio, Wearables, Accessories &amp; Lifestyle with instant GST breakdown &amp; express delivery.</p>
+  <!-- Dynamic Hero Slider -->
+  <section class="hero-slider" id="hero-slider">
+    <div class="hero-slide active">
+      <div class="hero-mesh-bg"></div>
+      <div class="hero-content fade-in-up">
+        <span class="hero-tag pulse-tag">🪔 Mega Tech Festival 2026</span>
+        <h1>Experience Future Tech with <span class="gradient-text">E-Cart India</span></h1>
+        <p>Explore over 150+ flagship products with instant GST breakdown & express delivery.</p>
+        <button class="primary-btn slider-btn" style="margin-top: 20px;">Shop Now</button>
+      </div>
     </div>
+    <div class="hero-slide">
+      <div class="hero-mesh-bg" style="background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.25) 0%, rgba(236, 72, 153, 0.08) 50%, transparent 80%);"></div>
+      <div class="hero-content fade-in-up">
+        <span class="hero-tag pulse-tag">⚡ Flat 20% OFF</span>
+        <h1>Upgrade Your <span class="gradient-text" style="background: linear-gradient(135deg, #f59e0b, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Lifestyle</span></h1>
+        <p>Grab the latest wearables, accessories, and home gadgets at unbeatable prices.</p>
+        <button class="primary-btn slider-btn" style="margin-top: 20px;">View Offers</button>
+      </div>
+    </div>
+    <div class="slider-controls">
+      <button id="slider-prev" class="slider-nav-btn">&larr;</button>
+      <button id="slider-next" class="slider-nav-btn">&rarr;</button>
+    </div>
+    <div class="slider-indicators" id="hero-slider-dots"></div>
   </section>
 
   <!-- Main Viewport Container -->
@@ -135,18 +185,24 @@
     
     <!-- Controls & Category Filters -->
     <section class="controls-bar">
-      <div class="category-filters" id="category-filters">
-        <button class="filter-chip active" data-category="all">All Products (150)</button>
-        <button class="filter-chip" data-category="Audio">Audio (15)</button>
-        <button class="filter-chip" data-category="Wearables">Wearables (15)</button>
-        <button class="filter-chip" data-category="Accessories">Accessories (15)</button>
-        <button class="filter-chip" data-category="Lifestyle">Lifestyle (15)</button>
-        <button class="filter-chip" data-category="Utensils">Utensils (15)</button>
-        <button class="filter-chip" data-category="Clothes">Clothes (15)</button>
-        <button class="filter-chip" data-category="Gaming Equipments">Gaming Equipments (15)</button>
-        <button class="filter-chip" data-category="Toys">Toys (15)</button>
-        <button class="filter-chip" data-category="Arts & Crafts">Arts &amp; Crafts (15)</button>
-        <button class="filter-chip" data-category="Sports Items">Sports Items (15)</button>
+      <div class="controls-left" style="display: flex; gap: 12px; align-items: center; overflow: hidden; width: 100%;">
+        <button id="advanced-filter-btn" class="secondary-btn" style="padding: 8px 12px; display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-bottom: 8px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+          Filters
+        </button>
+        <div class="category-filters" id="category-filters">
+          <button class="filter-chip active" data-category="all">All Products (150)</button>
+          <button class="filter-chip" data-category="Audio">Audio (15)</button>
+          <button class="filter-chip" data-category="Wearables">Wearables (15)</button>
+          <button class="filter-chip" data-category="Accessories">Accessories (15)</button>
+          <button class="filter-chip" data-category="Lifestyle">Lifestyle (15)</button>
+          <button class="filter-chip" data-category="Utensils">Utensils (15)</button>
+          <button class="filter-chip" data-category="Clothes">Clothes (15)</button>
+          <button class="filter-chip" data-category="Gaming Equipments">Gaming Equipments (15)</button>
+          <button class="filter-chip" data-category="Toys">Toys (15)</button>
+          <button class="filter-chip" data-category="Arts & Crafts">Arts &amp; Crafts (15)</button>
+          <button class="filter-chip" data-category="Sports Items">Sports Items (15)</button>
+        </div>
       </div>
       <div class="results-info">
         <div class="results-count" id="results-count">
@@ -176,6 +232,19 @@
       <p>Try searching for another keyword or clear your active category filter.</p>
       <button id="reset-filters-btn" class="secondary-btn">Reset All Filters</button>
     </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" id="pagination-container">
+      <!-- Populated via JS -->
+    </div>
+
+    <!-- Recently Viewed Section -->
+    <section class="recently-viewed-section" id="recently-viewed-section" style="margin-top: 40px; display: none;">
+      <h3 style="margin-bottom: 1.5rem; font-family: var(--font-heading); font-size: 1.5rem;">Recently Viewed</h3>
+      <div id="recently-viewed-grid" class="product-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+        <!-- Populated via JS -->
+      </div>
+    </section>
   </main>
 
   <!-- Grand Launch Festive Sale Event Popup Modal (Amazon Style) -->
@@ -610,6 +679,65 @@
 
   <!-- Toast Container -->
   <div id="toast-container" class="toast-container"></div>
+
+  <!-- Advanced Filter Drawer Sidebar -->
+  <aside id="filter-drawer" class="cart-drawer filter-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+        <h2>Advanced Filters</h2>
+      </div>
+      <button id="close-filter-btn" class="close-drawer-btn" aria-label="Close Filters">&times;</button>
+    </div>
+    <div class="filter-body" style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+      <div class="filter-group" style="margin-bottom: 2rem;">
+        <h4 style="margin-bottom: 1rem;">Price Range (₹)</h4>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input type="number" id="min-price" placeholder="Min" class="newsletter-input" style="width: 100%; border: 1px solid var(--border-light); background: rgba(255,255,255,0.05); color: var(--text-main); padding: 8px; border-radius: 4px;">
+          <span>-</span>
+          <input type="number" id="max-price" placeholder="Max" class="newsletter-input" style="width: 100%; border: 1px solid var(--border-light); background: rgba(255,255,255,0.05); color: var(--text-main); padding: 8px; border-radius: 4px;">
+        </div>
+      </div>
+      <div class="filter-group" style="margin-bottom: 2rem;">
+        <h4 style="margin-bottom: 1rem;">Minimum Rating</h4>
+        <div class="rating-filter">
+          <label class="checkbox-label" style="display: block; margin-bottom: 0.5rem;"><input type="radio" name="rating-filter" value="4"> <span>4★ & above</span></label>
+          <label class="checkbox-label" style="display: block; margin-bottom: 0.5rem;"><input type="radio" name="rating-filter" value="3"> <span>3★ & above</span></label>
+          <label class="checkbox-label" style="display: block; margin-bottom: 0.5rem;"><input type="radio" name="rating-filter" value="0" checked> <span>Any Rating</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-footer" style="display: flex; gap: 10px;">
+      <button id="clear-advanced-filters-btn" class="secondary-btn" style="flex: 1;">Clear</button>
+      <button id="apply-filters-btn" class="primary-btn" style="flex: 1;">Apply</button>
+    </div>
+  </aside>
+
+  <!-- Comparison Floating Bar -->
+  <div id="compare-bar" class="compare-bar hidden">
+    <div class="compare-bar-content">
+      <div class="compare-items" id="compare-items"></div>
+      <div class="compare-actions">
+        <button id="compare-btn" class="primary-btn">Compare (<span id="compare-count">0</span>)</button>
+        <button id="clear-compare-btn" class="secondary-btn">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Modal -->
+  <div id="compare-modal" class="modal-backdrop hidden">
+    <div class="compare-modal-card">
+      <div class="drawer-header" style="border-bottom: 1px solid var(--border-light); margin-bottom: 1.5rem; padding-bottom: 1rem;">
+        <h2>Product Comparison</h2>
+        <button id="close-compare-modal" class="modal-close-icon" style="position: static;">&times;</button>
+      </div>
+      <div class="compare-table-wrapper" style="overflow-x: auto;">
+        <table class="compare-table" id="compare-table">
+          <!-- Populated via JS -->
+        </table>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="app-footer">
