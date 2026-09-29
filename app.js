@@ -458,10 +458,22 @@
           </div>
         </article>
       `;
+      `;
       })
       .join('');
       
-    renderPagination(totalPages);
+      renderPagination(totalPages);
+    };
+
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        productGrid.innerHTML = skeletonHTML;
+        setTimeout(renderActual, 600);
+      });
+    } else {
+      productGrid.innerHTML = skeletonHTML;
+      setTimeout(renderActual, 600);
+    }
   }
 
   function renderPagination(totalPages) {
@@ -702,22 +714,6 @@
     qvDesc.textContent = product.description;
     qvPrice.textContent = formatINR(product.price);
     trackRecentlyViewed(productId);
-    const zoomContainer = document.getElementById('qv-zoom-container');
-    const zoomImg = document.getElementById('qv-img');
-      if (zoomContainer && zoomImg) {
-      zoomContainer.onmousemove = (e) => {
-        const rect = zoomContainer.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        zoomImg.style.transformOrigin = `${x}% ${y}%`;
-        zoomImg.style.transform = 'scale(2)';
-      };
-      zoomContainer.onmouseleave = () => {
-        zoomImg.style.transformOrigin = 'center center';
-        zoomImg.style.transform = 'scale(1)';
-      };
-    }
-  
     
     qvAddCart.onclick = () => {
       addToCart(product.id);
@@ -730,12 +726,12 @@
       const rect = qvMedia.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       const y = ((e.clientY - rect.top) / rect.height) * 100;
-      zoomImg.style.transformOrigin = `${x}% ${y}%`;
-      zoomImg.style.transform = 'scale(2)';
+      qvImage.style.transformOrigin = `${x}% ${y}%`;
+      qvImage.style.transform = 'scale(2)';
     };
     qvMedia.onmouseleave = () => {
-      zoomImg.style.transform = 'scale(1)';
-      zoomImg.style.transformOrigin = 'center center';
+      qvImage.style.transform = 'scale(1)';
+      qvImage.style.transformOrigin = 'center center';
     };
 
     // 2. Fake Customer Reviews
