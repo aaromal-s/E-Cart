@@ -501,24 +501,24 @@
         <div id="checkout-step-1" class="checkout-step active">
           <h3>Shipping Address</h3>
           <form id="shipping-form" class="checkout-form">
-            <div class="form-group">
-              <label>Full Name</label>
-              <input type="text" id="ship-name" required placeholder="John Doe">
-            </div>
-            <div class="form-group">
-              <label>Address Line</label>
-              <input type="text" id="ship-address" required placeholder="123 Main St, Apt 4B">
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>City</label>
-                <input type="text" id="ship-city" required placeholder="Mumbai">
+            <div class="floating-input-group">
+                <input type="text" id="ship-name" required placeholder=" ">
+                <label>Full Name</label>
               </div>
-              <div class="form-group">
-                <label>PIN Code</label>
-                <input type="text" id="ship-pin" required pattern="[0-9]{6}" placeholder="400001">
+              <div class="floating-input-group">
+                <input type="text" id="ship-address" required placeholder=" ">
+                <label>Address Line</label>
               </div>
-            </div>
+              <div class="form-row" style="display: flex; gap: 1rem;">
+                <div class="floating-input-group" style="flex: 1;">
+                  <input type="text" id="ship-city" required placeholder=" ">
+                  <label>City</label>
+                </div>
+                <div class="floating-input-group" style="flex: 1;">
+                  <input type="text" id="ship-pin" required pattern="[0-9]{6}" placeholder=" ">
+                  <label>PIN Code</label>
+                </div>
+              </div>
             <button type="submit" class="primary-btn checkout-next-btn" style="margin-top: 1rem; width: 100%;">Continue to Payment</button>
           </form>
         </div>

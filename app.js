@@ -151,6 +151,52 @@
   // 4. Initialization
   // =========================================================================
   function init() {
+  // --- PREDICTIVE SEARCH ---
+  const searchInputEl = document.getElementById('search-input');
+  const searchContainer = searchInputEl ? searchInputEl.parentElement : null;
+  if (searchInputEl && searchContainer) {
+    const dropdown = document.createElement('div');
+    dropdown.className = 'live-search-dropdown';
+    searchContainer.style.position = 'relative';
+    searchContainer.appendChild(dropdown);
+
+    searchInputEl.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) {
+        dropdown.classList.remove('active');
+        return;
+      }
+      const matches = window.PRODUCTS.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)).slice(0, 5);
+      
+      if (matches.length === 0) {
+        dropdown.innerHTML = '<div style="padding: 10px; color: var(--text-muted);">No products found</div>';
+      } else {
+        dropdown.innerHTML = matches.map(p => `
+          <div class="search-suggestion-item" data-id="${p.id}">
+            <img src="${p.image}" class="search-suggestion-img">
+            <div class="search-suggestion-details">
+              <h4>${p.name.substring(0,25)}...</h4>
+              <p>${formatINR(p.price)}</p>
+            </div>
+          </div>
+        `).join('');
+        
+        dropdown.querySelectorAll('.search-suggestion-item').forEach(item => {
+          item.onclick = () => {
+            dropdown.classList.remove('active');
+            searchInputEl.value = '';
+            openQuickView(parseInt(item.getAttribute('data-id'), 10));
+          };
+        });
+      }
+      dropdown.classList.add('active');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!searchContainer.contains(e.target)) dropdown.classList.remove('active');
+    });
+  }
+  
     if (!window.PRODUCTS || !Array.isArray(window.PRODUCTS)) {
       console.error('E-Cart Error: window.PRODUCTS array missing.');
       return;
@@ -656,6 +702,22 @@
     qvDesc.textContent = product.description;
     qvPrice.textContent = formatINR(product.price);
     trackRecentlyViewed(productId);
+    const zoomContainer = document.getElementById('qv-zoom-container');
+    const qvImage = document.getElementById('qv-img');
+    if (zoomContainer && qvImage) {
+      zoomContainer.onmousemove = (e) => {
+        const rect = zoomContainer.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        qvImage.style.transformOrigin = `${x}% ${y}%`;
+        qvImage.style.transform = 'scale(2)';
+      };
+      zoomContainer.onmouseleave = () => {
+        qvImage.style.transformOrigin = 'center center';
+        qvImage.style.transform = 'scale(1)';
+      };
+    }
+  
     
     qvAddCart.onclick = () => {
       addToCart(product.id);
@@ -1099,7 +1161,7 @@
     
     if (!themeBtn) return;
     
-    const savedTheme = localStorage.getItem('ecart_theme') || 'dark';
+    const savedTheme = localStorage.getItem('ecart_theme') || 'light';
     if (savedTheme === 'light') {
       document.documentElement.setAttribute('data-theme', 'light');
       moonIcon.style.display = 'none';
